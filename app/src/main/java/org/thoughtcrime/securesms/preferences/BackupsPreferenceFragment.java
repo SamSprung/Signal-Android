@@ -11,6 +11,7 @@ import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -73,6 +74,7 @@ public class BackupsPreferenceFragment extends Fragment {
   private ProgressBar progress;
   private TextView    progressSummary;
   private ComposeView upgradeCard;
+  private CheckBox    screenCheckBox;
 
   private final NumberFormat formatter = NumberFormat.getInstance();
 
@@ -98,9 +100,11 @@ public class BackupsPreferenceFragment extends Fragment {
     progress        = view.findViewById(R.id.fragment_backup_progress);
     progressSummary = view.findViewById(R.id.fragment_backup_progress_summary);
     upgradeCard     = view.findViewById(R.id.upgrade_to_improved_backups_card);
+    screenCheckBox  = view.findViewById(R.id.fragment_backup_progress_screen_on);
 
     toggle.setOnClickListener(unused -> onToggleClicked());
     create.setOnClickListener(unused -> onCreateClicked());
+    screenCheckBox.setOnCheckedChangeListener((compoundButton, enabled) -> screenCheckBox.setKeepScreenOn(enabled));
     verify.setOnClickListener(unused -> BackupDialog.showVerifyBackupPassphraseDialog(requireContext()));
     timer.setOnClickListener(unused -> pickTime());
 
@@ -159,6 +163,8 @@ public class BackupsPreferenceFragment extends Fragment {
       progress.setVisibility(View.VISIBLE);
       progressSummary.setVisibility(event.getCount() > 0 ? View.VISIBLE : View.GONE);
 
+      screenCheckBox.setVisibility(View.VISIBLE);
+
       if (event.getEstimatedTotalCount() == 0) {
         progress.setIndeterminate(true);
         progressSummary.setText(getString(R.string.BackupsPreferenceFragment__d_so_far, event.getCount()));
@@ -174,6 +180,8 @@ public class BackupsPreferenceFragment extends Fragment {
       create.setEnabled(true);
       progress.setVisibility(View.GONE);
       progressSummary.setVisibility(View.GONE);
+      screenCheckBox.setChecked(false);
+      screenCheckBox.setVisibility(View.GONE);
       setBackupSummary();
       ThreadUtil.runOnMainDelayed(this::setBackupSummary, 100);
     }
