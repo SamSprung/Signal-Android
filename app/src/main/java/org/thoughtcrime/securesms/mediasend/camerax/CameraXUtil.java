@@ -129,7 +129,7 @@ public class CameraXUtil {
 
   public static int getIdealResolution(int displayWidth, int displayHeight) {
     int maxDisplay = Math.max(displayWidth, displayHeight);
-    return Math.max(maxDisplay, 1920);
+    return Math.max(maxDisplay, 12000);
   }
 
   public static @NonNull Size buildResolutionForRatio(int longDimension, @NonNull Rational ratio, boolean isPortrait) {
@@ -190,7 +190,7 @@ public class CameraXUtil {
   private static byte[] toJpegBytes(@NonNull Bitmap bitmap) throws IOException {
     ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-    if (!bitmap.compress(Bitmap.CompressFormat.JPEG, 80, out)) {
+    if (!bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)) {
       throw new IOException("Failed to compress bitmap.");
     }
 
