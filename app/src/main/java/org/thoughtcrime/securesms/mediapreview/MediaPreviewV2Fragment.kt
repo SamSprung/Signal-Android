@@ -558,12 +558,11 @@ class MediaPreviewV2Fragment : LoggingFragment(R.layout.fragment_media_preview_v
   }
 
   private fun saveToDisk(mediaItem: MediaTable.MediaRecord) {
-    SaveAttachmentTask.showWarningDialog(requireContext()) { _: DialogInterface?, _: Int ->
-      if (StorageUtil.canWriteToMediaStore()) {
-        performSaveToDisk(mediaItem)
-        return@showWarningDialog
-      }
-      Permissions.with(this)
+    if (StorageUtil.canWriteToMediaStore()) {
+      performSaveToDisk(mediaItem)
+      return
+    }
+    SaveAttachmentTask.showWarningDialog(requireContext()) { _: DialogInterface?, _: Int -> Permissions.with(this)
         .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         .ifNecessary()
         .withPermanentDenialDialog(getString(R.string.MediaPreviewActivity_signal_needs_the_storage_permission_in_order_to_write_to_external_storage_but_it_has_been_permanently_denied))
