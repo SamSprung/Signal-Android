@@ -653,20 +653,19 @@ public final class ImageEditorFragment extends Fragment implements ImageEditorHu
 
   @Override
   public void onSave() {
-    SaveAttachmentTask.showWarningDialog(requireContext(), (dialogInterface, i) -> {
-      if (StorageUtil.canWriteToMediaStore()) {
-        performSaveToDisk();
-        return;
-      }
+    if (StorageUtil.canWriteToMediaStore()) {
+      performSaveToDisk();
+      return;
+    }
 
-      Permissions.with(this)
+    SaveAttachmentTask.showWarningDialog(requireContext(), (dialogInterface, i) -> Permissions.with(this)
                  .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                  .ifNecessary()
                  .withPermanentDenialDialog(getString(R.string.MediaPreviewActivity_signal_needs_the_storage_permission_in_order_to_write_to_external_storage_but_it_has_been_permanently_denied))
                  .onAnyDenied(() -> Toast.makeText(requireContext(), R.string.MediaPreviewActivity_unable_to_write_to_external_storage_without_permission, Toast.LENGTH_LONG).show())
                  .onAllGranted(this::performSaveToDisk)
-                 .execute();
-    });
+                 .execute()
+    );
   }
 
   @Override
