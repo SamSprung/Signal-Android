@@ -7,6 +7,10 @@ plugins {
 
 android {
   namespace = "org.signal.core.util"
+
+  defaultConfig {
+    buildConfigField("boolean", "VERBOSE_LOGGING", "false")
+  }
 }
 
 dependencies {
