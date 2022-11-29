@@ -13,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.signal.core.util.isNotNullOrBlank
+import org.thoughtcrime.securesms.BuildConfig;
 import org.thoughtcrime.securesms.R
 import org.thoughtcrime.securesms.badges.BadgeImageView
 import org.thoughtcrime.securesms.banner.BannerManager
@@ -43,6 +44,7 @@ import org.thoughtcrime.securesms.util.adapter.mapping.MappingViewHolder
 import org.thoughtcrime.securesms.util.navigation.safeNavigate
 import org.thoughtcrime.securesms.util.views.Stub
 import org.thoughtcrime.securesms.util.visible
+import java.util.Objects
 
 class AppSettingsFragment : DSLSettingsFragment(
   titleId = R.string.text_secure_normal__menu_settings,
@@ -136,6 +138,7 @@ class AppSettingsFragment : DSLSettingsFragment(
         isEnabled = state.isRegisteredAndUpToDate()
       )
 
+      if (!Objects.equals(BuildConfig.BUILD_DISTRIBUTION_TYPE, "eightbit")) {
       if (state.allowUserToGoToDonationManagementScreen) {
         clickPref(
           title = DSLSettingsText.from(R.string.preferences__donate_to_signal),
@@ -152,6 +155,7 @@ class AppSettingsFragment : DSLSettingsFragment(
           icon = DSLSettingsIcon.from(R.drawable.symbol_heart_24),
           linkId = R.string.donate_url
         )
+      }
       }
 
       dividerPref()
