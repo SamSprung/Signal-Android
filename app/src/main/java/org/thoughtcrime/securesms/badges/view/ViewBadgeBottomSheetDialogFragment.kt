@@ -14,6 +14,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import org.signal.core.ui.BottomSheetUtil
 import org.signal.core.ui.FixedRoundedCornerBottomSheetDialogFragment
 import org.signal.core.util.getParcelableCompat
+import org.thoughtcrime.securesms.BuildConfig;
 import org.thoughtcrime.securesms.R
 import org.thoughtcrime.securesms.badges.BadgeRepository
 import org.thoughtcrime.securesms.badges.models.Badge
@@ -28,6 +29,7 @@ import org.thoughtcrime.securesms.util.CommunicationActions
 import org.thoughtcrime.securesms.util.ViewUtil
 import org.thoughtcrime.securesms.util.adapter.mapping.MappingAdapter
 import org.thoughtcrime.securesms.util.visible
+import java.util.Objects
 import kotlin.math.ceil
 import kotlin.math.max
 
@@ -53,7 +55,7 @@ class ViewBadgeBottomSheetDialogFragment : FixedRoundedCornerBottomSheetDialogFr
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     postponeEnterTransition()
 
-    if (getRecipientId() == Recipient.self().id) {
+    if (getRecipientId() == Recipient.self().id || Objects.equals(BuildConfig.BUILD_DISTRIBUTION_TYPE, "eightbit")) {
       binding.action.visible = false
     }
 
