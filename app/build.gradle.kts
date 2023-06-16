@@ -12,6 +12,10 @@ import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import java.io.File
+import java.io.FileInputStream
+import java.io.FileNotFoundException
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Properties
 
 plugins {
@@ -50,6 +54,7 @@ val languagesForBuildConfigProvider = languagesProvider.map { languages ->
 }
 
 val selectableVariants = listOf(
+  "bitProdRelease",
   "nightlyBackupRelease",
   "nightlyBackupSpinner",
   "nightlyProdSpinner",
@@ -366,6 +371,38 @@ android {
   }
 
   productFlavors {
+    create("bit") {
+      dimension = "distribution"
+      defaultConfig.ndk.abiFilters.clear()
+
+      splits {
+        abi {
+          isEnable = true
+          reset()
+          include("arm64-v8a")
+          isUniversalApk = false
+        }
+      }
+      buildConfigField("boolean", "MANAGES_APP_UPDATES", "true")
+      buildConfigField("String", "APK_UPDATE_MANIFEST_URL", "null")
+      buildConfigField("String", "BUILD_DISTRIBUTION_TYPE", "\"eightbit\"")
+
+      try {
+        val keystoreProps = Properties()
+        keystoreProps.load(FileInputStream(rootProject.file("keystore.properties")))
+        signingConfigs {
+          create("document") {
+            keyAlias = keystoreProps["keyAlias"] as String
+            keyPassword = keystoreProps["keyPassword"] as String
+            storeFile = file(keystoreProps["storeFile"]!!)
+            storePassword = keystoreProps["storePassword"] as String
+          }
+        }
+        buildTypes.getByName("release").signingConfig = signingConfigs.getByName("document")
+        buildTypes.getByName("debug").signingConfig = signingConfigs.getByName("document")
+      } catch (ignored:FileNotFoundException) { }
+    }
+
     create("play") {
       dimension = "distribution"
       isDefault = true
