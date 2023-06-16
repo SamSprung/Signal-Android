@@ -3,6 +3,9 @@
 import com.android.build.api.artifact.ArtifactTransformationRequest
 import com.android.build.api.artifact.SingleArtifact
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileNotFoundException
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 import java.time.Instant
@@ -62,6 +65,7 @@ val isInstrumentationTestRun = gradle.startParameter.taskNames.any { taskName ->
 }
 
 val selectableVariants = listOf(
+  "bitProdRelease",
   "nightlyProdSpinner",
   "nightlyProdPerf",
   "nightlyProdRelease",
@@ -413,6 +417,38 @@ android {
   }
 
   productFlavors {
+    create("bit") {
+      dimension = "distribution"
+      defaultConfig.ndk.abiFilters.clear()
+
+      splits {
+        abi {
+          isEnable = true
+          reset()
+          include("arm64-v8a")
+          isUniversalApk = false
+        }
+      }
+      buildConfigField("boolean", "MANAGES_APP_UPDATES", "true")
+      buildConfigField("String", "APK_UPDATE_MANIFEST_URL", "null")
+      buildConfigField("String", "BUILD_DISTRIBUTION_TYPE", "\"eightbit\"")
+
+      try {
+        val keystoreProps = Properties()
+        keystoreProps.load(FileInputStream(rootProject.file("keystore.properties")))
+        signingConfigs {
+          create("document") {
+            keyAlias = keystoreProps["keyAlias"] as String
+            keyPassword = keystoreProps["keyPassword"] as String
+            storeFile = file(keystoreProps["storeFile"]!!)
+            storePassword = keystoreProps["storePassword"] as String
+          }
+        }
+        buildTypes.getByName("release").signingConfig = signingConfigs.getByName("document")
+        buildTypes.getByName("debug").signingConfig = signingConfigs.getByName("document")
+      } catch (ignored:FileNotFoundException) { }
+    }
+
     create("play") {
       dimension = "distribution"
       isDefault = true
