@@ -1,10 +1,10 @@
 package org.signal.core.util.logging
 
 import android.annotation.SuppressLint
+import org.signal.core.util.BuildConfig
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
-import org.signal.core.util.BuildConfig
 
 @SuppressLint("LogNotSignal")
 object AndroidLogger : Log.Logger() {
