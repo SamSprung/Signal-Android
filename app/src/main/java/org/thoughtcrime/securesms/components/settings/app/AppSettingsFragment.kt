@@ -16,7 +16,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.signal.core.util.isNotNullOrBlank
-import org.thoughtcrime.securesms.BuildConfig;
+import org.thoughtcrime.securesms.BuildConfig
 import org.thoughtcrime.securesms.R
 import org.thoughtcrime.securesms.badges.BadgeImageView
 import org.thoughtcrime.securesms.components.AvatarImageView
@@ -170,7 +170,9 @@ class AppSettingsFragment : DSLSettingsFragment(
         isEnabled = state.isRegisteredAndUpToDate()
       )
 
-      if (!Objects.equals(BuildConfig.BUILD_DISTRIBUTION_TYPE, "eightbit")) {
+      if (Objects.equals(BuildConfig.BUILD_DISTRIBUTION_TYPE, "eightbit")) {
+        // Donation "megaphones" are intrusive enough
+      } else
       if (state.allowUserToGoToDonationManagementScreen) {
         clickPref(
           title = DSLSettingsText.from(R.string.preferences__donate_to_signal),
@@ -187,7 +189,6 @@ class AppSettingsFragment : DSLSettingsFragment(
           icon = DSLSettingsIcon.from(R.drawable.symbol_heart_24),
           linkId = R.string.donate_url
         )
-      }
       }
 
       dividerPref()
