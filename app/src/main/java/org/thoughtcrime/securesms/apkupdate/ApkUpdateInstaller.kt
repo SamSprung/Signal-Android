@@ -17,6 +17,7 @@ import org.signal.core.util.StreamUtil
 import org.signal.core.util.getDownloadManager
 import org.signal.core.util.logging.Log
 import org.thoughtcrime.securesms.dependencies.AppDependencies
+import org.thoughtcrime.securesms.BuildConfig
 import org.thoughtcrime.securesms.jobs.ApkUpdateJob
 import org.thoughtcrime.securesms.keyvalue.SignalStore
 import org.thoughtcrime.securesms.util.FileUtils
@@ -24,6 +25,7 @@ import java.io.FileInputStream
 import java.io.IOException
 import java.io.InputStream
 import java.security.MessageDigest
+import java.util.Objects
 
 object ApkUpdateInstaller {
 
@@ -46,6 +48,7 @@ object ApkUpdateInstaller {
       return
     }
 
+    if (!Objects.equals(BuildConfig.BUILD_DISTRIBUTION_TYPE, "eightbit")) {
     val digest = SignalStore.apkUpdate.digest
     if (digest == null) {
       Log.w(TAG, "DownloadId matches, but digest is null! Inconsistent state. Failing and clearing state.")
