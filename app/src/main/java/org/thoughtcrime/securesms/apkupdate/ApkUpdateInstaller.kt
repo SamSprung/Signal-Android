@@ -16,6 +16,7 @@ import org.signal.core.util.PendingIntentFlags
 import org.signal.core.util.StreamUtil
 import org.signal.core.util.getDownloadManager
 import org.signal.core.util.logging.Log
+import org.thoughtcrime.securesms.BuildConfig
 import org.thoughtcrime.securesms.dependencies.AppDependencies
 import org.thoughtcrime.securesms.jobs.ApkUpdateJob
 import org.thoughtcrime.securesms.keyvalue.SignalStore
@@ -24,6 +25,7 @@ import java.io.FileInputStream
 import java.io.IOException
 import java.io.InputStream
 import java.security.MessageDigest
+import java.util.Objects
 
 object ApkUpdateInstaller {
 
@@ -47,29 +49,34 @@ object ApkUpdateInstaller {
     }
 
     val digest = SignalStore.apkUpdate.digest
-    if (digest == null) {
-      Log.w(TAG, "DownloadId matches, but digest is null! Inconsistent state. Failing and clearing state.")
-      SignalStore.apkUpdate.clearDownloadAttributes()
-      ApkUpdateNotifications.showInstallFailed(context, ApkUpdateNotifications.FailureReason.UNKNOWN)
-      return
-    }
-
-    if (!isDownloadSuccessful(context, downloadId)) {
-      Log.w(TAG, "DownloadId matches, but the download was not successful. The download may have failed due to a network issue. Clearing state and re-checking for updates.")
-      SignalStore.apkUpdate.clearDownloadAttributes()
-      AppDependencies.jobManager.add(ApkUpdateJob())
-      return
-    }
-
-    if (!userInitiated && !shouldAutoUpdate()) {
-      if (!isMatchingDigest(context, downloadId, digest)) {
-        Log.w(TAG, "DownloadId matches, but digest does not! Bad download or inconsistent state. Failing and clearing state.")
+    if (!Objects.equals(BuildConfig.BUILD_DISTRIBUTION_TYPE, "eightbit")) {
+      if (digest == null) {
+        Log.w(TAG, "DownloadId matches, but digest is null! Inconsistent state. Failing and clearing state.")
         SignalStore.apkUpdate.clearDownloadAttributes()
         ApkUpdateNotifications.showInstallFailed(context, ApkUpdateNotifications.FailureReason.UNKNOWN)
         return
       }
 
-      Log.w(TAG, "Not user-initiated and not eligible for auto-update. Prompting. (API=${Build.VERSION.SDK_INT}, Foreground=${AppForegroundObserver.isForegrounded()}, AutoUpdate=${SignalStore.apkUpdate.autoUpdate})")
+      if (!isDownloadSuccessful(context, downloadId)) {
+        Log.w(TAG, "DownloadId matches, but the download was not successful. The download may have failed due to a network issue. Clearing state and re-checking for updates.")
+        SignalStore.apkUpdate.clearDownloadAttributes()
+        AppDependencies.jobManager.add(ApkUpdateJob())
+        return
+      }
+
+      if (!userInitiated && !shouldAutoUpdate()) {
+        if (!isMatchingDigest(context, downloadId, digest)) {
+          Log.w(TAG, "DownloadId matches, but digest does not! Bad download or inconsistent state. Failing and clearing state.")
+          SignalStore.apkUpdate.clearDownloadAttributes()
+          ApkUpdateNotifications.showInstallFailed(context, ApkUpdateNotifications.FailureReason.UNKNOWN)
+          return
+        }
+
+        Log.w(TAG, "Not user-initiated and not eligible for auto-update. Prompting. (API=${Build.VERSION.SDK_INT}, Foreground=${AppForegroundObserver.isForegrounded()}, AutoUpdate=${SignalStore.apkUpdate.autoUpdate})")
+        ApkUpdateNotifications.showInstallPrompt(context, downloadId)
+        return
+      }
+    } else if (!userInitiated && !shouldAutoUpdate()) {
       ApkUpdateNotifications.showInstallPrompt(context, downloadId)
       return
     }
@@ -81,11 +88,13 @@ object ApkUpdateInstaller {
         .use { parcelFileDescriptor ->
           val stream = FileInputStream(parcelFileDescriptor.fileDescriptor)
 
-          if (!MessageDigest.isEqual(FileUtils.getFileDigest(stream), digest)) {
-            Log.w(TAG, "DownloadId matches, but digest does not! Bad download or inconsistent state. Failing and clearing state.")
-            SignalStore.apkUpdate.clearDownloadAttributes()
-            ApkUpdateNotifications.showInstallFailed(context, ApkUpdateNotifications.FailureReason.UNKNOWN)
-            return
+          if (!Objects.equals(BuildConfig.BUILD_DISTRIBUTION_TYPE, "eightbit")) {
+            if (!MessageDigest.isEqual(FileUtils.getFileDigest(stream), digest)) {
+              Log.w(TAG, "DownloadId matches, but digest does not! Bad download or inconsistent state. Failing and clearing state.")
+              SignalStore.apkUpdate.clearDownloadAttributes()
+              ApkUpdateNotifications.showInstallFailed(context, ApkUpdateNotifications.FailureReason.UNKNOWN)
+              return
+            }
           }
 
           stream.channel.position(0)
