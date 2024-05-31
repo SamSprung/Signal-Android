@@ -624,6 +624,7 @@ dependencies {
 
   "playImplementation"(project(":billing"))
   "nightlyImplementation"(project(":billing"))
+  "bitImplementation"(project(":billing"))
 
   "spinnerImplementation"(project(":spinner"))
 
