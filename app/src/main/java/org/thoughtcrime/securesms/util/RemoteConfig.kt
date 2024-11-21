@@ -1138,7 +1138,15 @@ object RemoteConfig {
   /** Whether or not this device supports syncing data to newly-linked device. */
   @JvmStatic
   val linkAndSync: Boolean by remoteBoolean(
-    key = "android.linkAndSync",
+    key = "android.linkAndSync.2",
+    defaultValue = false,
+    hotSwappable = true
+  )
+
+  /** Whether or not this device supports the new storage service recordIkm encryption. */
+  @JvmStatic
+  val storageServiceEncryptionV2: Boolean by remoteBoolean(
+    key = "android.ssre2",
     defaultValue = false,
     hotSwappable = true
   )
