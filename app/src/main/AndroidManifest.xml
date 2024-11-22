@@ -90,6 +90,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA" />
     <!-- For vestigial telecom integration service -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_PHONE_CALL" />
 
@@ -594,7 +595,17 @@
             <action android:name="android.intent.action.VIEW" />
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE" />
-            <data android:scheme="https" android:host="signaldonations.org" android:pathPrefix="/stripe/return/ideal"/>
+            <data android:scheme="https"/>
+            <data android:host="signaldonations.org"/>
+            <data android:pathPrefix="/stripe/return/ideal"/>
+        </intent-filter>
+
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="sgnl"/>
+            <data android:host="ideal"/>
         </intent-filter>
 
         <intent-filter android:autoVerify="true">
@@ -1135,12 +1146,6 @@
 
     <service
         android:enabled="true"
-        android:name=".service.webrtc.WebRtcCallService"
-        android:foregroundServiceType="dataSync"
-        android:exported="false"/>
-
-    <service
-        android:enabled="true"
         android:exported="false"
         android:name=".service.KeyCachingService"
         android:foregroundServiceType="remoteMessaging"/>
@@ -1406,7 +1411,7 @@
     <service
         android:name="org.thoughtcrime.securesms.service.webrtc.ActiveCallManager$ActiveCallForegroundService"
         android:exported="false"
-        android:foregroundServiceType="dataSync|microphone" />
+        android:foregroundServiceType="dataSync|microphone|camera" />
 
     <receiver android:name="org.thoughtcrime.securesms.service.webrtc.ActiveCallManager$ActiveCallServiceReceiver" android:exported="false">
         <intent-filter>
