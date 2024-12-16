@@ -412,6 +412,7 @@
     <!-- Footer shown in legacy SMS message where %s is the name of the recipient the message is going to -->
     <string name="ConversationItem_to_s">%1$s ਨੂੰ</string>
     <string name="ConversationItem_read_more"> ਹੋਰ ਪੜ੍ਹੋ</string>
+    <!-- Footer shown at the end of long body messages to download more of it -->
     <string name="ConversationItem_download_more"> ਹੋਰ ਡਾਊਨਲੋਡ ਕਰੋ</string>
     <string name="ConversationItem_pending"> ਬਕਾਇਆ</string>
     <string name="ConversationItem_this_message_was_deleted">ਇਹ ਸੁਨੇਹਾ ਮਿਟਾ ਦਿੱਤਾ ਗਿਆ ਸੀ।</string>
@@ -1297,6 +1298,7 @@
     <!-- AddMembersActivity -->
     <string name="AddMembersActivity__done">ਹੋ ਗਿਆ</string>
     <string name="AddMembersActivity__this_person_cant_be_added_to_legacy_groups">ਇਸ ਵਿਅਕਤੀ ਨੂੰ ਲੈਗਸੀ ਗਰੁੱਪਾਂ ਵਿੱਚ ਸ਼ਾਮਲ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ।</string>
+    <!-- Confirmation text when adding a member to a group. If one person is added, %1$s is their name. If multiple people are added, the total number is %3$d. %2$s is the name of the group -->
     <plurals name="AddMembersActivity__add_d_members_to_s">
         <item quantity="one">ਕੀ \"%1$s\" ਨੂੰ \"%2$s\" ਵਿੱਚ ਸ਼ਾਮਲ ਕਰਨਾ ਹੈ?</item>
         <item quantity="other">ਕੀ %3$d ਮੈਂਬਰਾਂ ਨੂੰ \"%2$s\" ਵਿੱਚ ਸ਼ਾਮਲ ਕਰਨਾ ਹੈ?</item>
@@ -1383,9 +1385,9 @@
     <!-- Text label button to skip restore from remote -->
     <string name="RemoteRestoreActivity__skip_restore">ਰੀਸਟੋਰ ਕਰਨਾ ਛੱਡੋ</string>
     <!-- Dialog title displayed when remote restore failed -->
-    <string name="RemoteRestoreActivity__couldnt_transfer">Couldn\'t finish transfer</string>
+    <string name="RemoteRestoreActivity__couldnt_transfer">ਟ੍ਰਾਂਸਫਰ ਨੂੰ ਪੂਰਾ ਨਹੀਂ ਕਰ ਸਕੇ</string>
     <!-- Dialog message displayed when remote restore failed -->
-    <string name="RemoteRestoreActivity__error_occurred">An error occurred and your account couldn’t be transferred. Try again by choosing your transfer method.</string>
+    <string name="RemoteRestoreActivity__error_occurred">ਕਿਸੇ ਗੜਬੜ ਕਾਰਨ ਤੁਹਾਡਾ ਖਾਤਾ ਟ੍ਰਾਂਸਫਰ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ। ਆਪਣੀ ਟ੍ਰਾਂਸਫਰ ਵਿਧੀ ਚੁਣ ਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।</string>
 
     <!-- GroupMentionSettingDialog -->
     <string name="GroupMentionSettingDialog_notify_me_for_mentions">ਹਵਾਲਿਆਂ ਲਈ ਮੈਨੂੰ ਸੂਚਿਤ ਕਰੋ</string>
@@ -1455,7 +1457,9 @@
     <string name="CustomNotificationsDialogFragment__change_sound_and_vibration">ਧੁਨ ਅਤੇ ਵਾਈਬ੍ਰੇਸ਼ਨ ਬਦਲੋ</string>
     <string name="CustomNotificationsDialogFragment__call_settings">ਕਾਲ ਸੈਟਿੰਗਾਂ</string>
     <string name="CustomNotificationsDialogFragment__ringtone">ਰਿੰਗਟੋਨ</string>
+    <!-- Subtitle when the ringtone used for calls is the default system -->
     <string name="CustomNotificationsDialogFragment__default">ਡਿਫ਼ਾਲਟ</string>
+    <!-- Subtitle when the ringtone used for calls is unknown -->
     <string name="CustomNotificationsDialogFragment__unknown">ਅਣਜਾਣ</string>
 
     <!-- ShareableGroupLinkDialogFragment -->
@@ -1636,6 +1640,7 @@
     <string name="Megaphones_verify_pin">PIN ਨੂੰ ਤਸਦੀਕ ਕਰੋ</string>
     <string name="Megaphones_get_started">ਸ਼ੁਰੂਆਤ ਕਰੋ</string>
     <string name="Megaphones_new_group">ਨਵਾਂ ਗਰੁੱਪ</string>
+    <!-- Text in a card view to invite friends as part of the onboarding megaphone -->
     <string name="Megaphones_invite_friends">ਦੋਸਤਾਂ ਨੂੰ ਸੱਦੋ</string>
     <string name="Megaphones_chat_colors">ਚੈਟ ਦੇ ਰੰਗ</string>
     <string name="Megaphones_add_a_profile_photo">ਪ੍ਰੋਫ਼ਾਈਲ ਫ਼ੋਟੋ</string>
@@ -2457,6 +2462,7 @@
 
     <!-- RecaptchaProofActivity -->
     <string name="RecaptchaProofActivity_failed_to_submit">ਦਰਜ ਕਰਨਾ ਅਸਫਲ ਰਿਹਾ</string>
+    <!-- Toolbar title when solving a captcha -->
     <string name="RecaptchaProofActivity_complete_verification">ਪ੍ਰਮਾਣੀਕਰਣ ਪੂਰਾ ਕਰੋ</string>
 
     <!-- RegistrationActivity -->
@@ -2981,6 +2987,7 @@
 
     <!-- ThumbnailView -->
     <string name="ThumbnailView_Play_video_description">ਵੀਡੀਓ ਚਲਾਓ</string>
+    <!-- Content description to describe an icon that indicates a video has captions -->
     <string name="ThumbnailView_Has_a_caption_description">ਇਸਦੀ ਕੈਪਸ਼ਨ ਹੈ</string>
 
     <!-- TransferControlView -->
@@ -3491,10 +3498,10 @@
         <item>ਫੀਚਰ ਲਈ ਬੇਨਤੀ</item>
         <item>ਸਵਾਲ</item>
         <item>ਫੀਡਬੈਕ</item>
-        <item>ਕੁਝ ਹੋਰ</item>
-        <item>ਭੁਗਤਾਨ (MobileCoin)</item>
-        <item>ਦਾਨ ਅਤੇ ਬੈਜ</item>
-        <item>Signal Android ਬੈਕਅੱਪ</item>
+        <item>Payments (MobileCoin)</item>
+        <item>Donations &amp; Badges</item>
+        <item>Signal Android Backup</item>
+        <item>Other</item>
     </string-array>
     <!-- Subject of email when submitting debug logs to help debug slow notifications -->
     <string name="DebugLogsPromptDialogFragment__signal_android_support_request">Signal Android ਡੀਬੱਗ ਲੌਗ ਸਪੁਰਦਗੀ</string>
@@ -3574,7 +3581,9 @@
     <string name="preferences__lock_signal_and_message_notifications_with_a_passphrase">ਪਾਸਫ਼੍ਰੇਜ਼ ਦੇ ਨਾਲ ਸਕਰੀਨ ਅਤੇ ਸੂਚਨਾਵਾਂ ਨੂੰ ਲੌਕ ਕਰੋ</string>
     <string name="preferences__screen_security">ਸਕ੍ਰੀਨ ਸੁਰੱਖਿਆ</string>
     <string name="preferences__auto_lock_signal_after_a_specified_time_interval_of_inactivity">ਨਿਸ਼ਕਿਰਿਆ ਦੇ ਇੱਕ ਨਿਸ਼ਚਿਤ ਸਮੇਂ ਅੰਤਰਾਲ ਤੋਂ ਬਾਅਦ Signal ਨੂੰ ਆਟੋ-ਲੌਕ ਕਰੋ</string>
+    <!-- Legacy preference menu item to enable locking of app after inactivity -->
     <string name="preferences__inactivity_timeout_passphrase">ਇਨ-ਐਕਟੀਵਿਟੀ ਟਾਈਮਆਉਟ ਪਾਸਫ਼੍ਰੇਜ਼</string>
+    <!-- Legacy preference menu item to choose the interval of inactivity before lockout -->
     <string name="preferences__inactivity_timeout_interval">ਅਕਿਰਿਆਸ਼ੀਲਤਾ ਸਮਾਂ ਅੰਤਰਾਲ</string>
     <string name="preferences__notifications">ਸੂਚਨਾਵਾਂ</string>
     <string name="preferences__led_color">LED ਰੰਗ</string>
@@ -3585,6 +3594,7 @@
     <!-- Preference menu item to control the sound of notifications -->
     <string name="preferences__sound">ਆਵਾਜ਼</string>
     <string name="preferences__silent">ਚੁੱਪ</string>
+    <!-- Preference menu item to use the default sound for notifications -->
     <string name="preferences__default">ਡਿਫੌਲਟ</string>
     <string name="preferences__repeat_alerts">ਚੇਤਾਵਨੀ ਦੁਹਰਾਓ</string>
     <string name="preferences__never">ਕਦੇ ਨਹੀਂ</string>
@@ -3601,6 +3611,7 @@
     <string name="preferences__cyan">ਸਿਆਨ</string>
     <string name="preferences__magenta">ਮਜੈਂਟਾ</string>
     <string name="preferences__white">ਸਫੈਦ</string>
+    <!-- Text shown when no preference label has been selected -->
     <string name="preferences__none">ਕੋਈ ਨਹੀਂ</string>
     <string name="preferences__fast">ਤੇਜ਼</string>
     <string name="preferences__normal">ਆਮ</string>
@@ -4191,6 +4202,7 @@
 
 
     <!-- media_preview_activity -->
+    <!-- Content description of images or videos when viewing media -->
     <string name="media_preview_activity__media_content_description">ਮੀਡੀਆ ਝਲਕ</string>
 
     <!-- new_conversation_activity -->
@@ -4364,6 +4376,7 @@
     <string name="BackupDialog_disable_and_delete_all_local_backups">ਕੀ ਸਾਰੇ ਲੋਕਲ ਬੈਕਅੱਪ ਅਸਮਰੱਥ ਕਰਨੇ ਅਤੇ ਮਿਟਾਉਣੇ ਹਨ?</string>
     <string name="BackupDialog_delete_backups_statement">ਬੈਕਅੱਪ ਮਿਟਾਓ</string>
     <string name="BackupDialog_to_enable_backups_choose_a_folder">ਬੈਕਅੱਪ ਸਮਰੱਥ ਕਰਨ ਲਈ, ਫੋਲਡਰ ਚੁਣੋ। ਬੈਕਅੱਪਾਂ ਨੂੰ ਇਸ ਟਿਕਾਣੇ ਉੱਤੇ ਸੰਭਾਲਿਆ ਜਾਵੇਗਾ।</string>
+    <!-- Button shown in dialog to choose a folder for backups -->
     <string name="BackupDialog_choose_folder">ਫੋਲਡਰ ਚੁਣੋ</string>
     <string name="BackupDialog_copied_to_clipboard">ਕਲਿਪਬੋਰਡ ਤੇ ਕਾਪੀ ਕੀਤਾ ਗਿਆ</string>
     <string name="BackupDialog_no_file_picker_available">ਕੋਈ ਫਾਇਲ ਚੁਣਨ ਵਾਲਾ ਮੌਜੂਦ ਨਹੀਂ ਹੈ।</string>
@@ -4808,6 +4821,7 @@
     <string name="ShareActivity__share">ਸਾਂਝਾ ਕਰੋ</string>
     <!-- Label to describe circular spinner button -->
     <string name="ShareActivity__send">ਭੇਜੋ</string>
+    <!-- When sharing to a list of people, %1$s is the name of a person -->
     <string name="ShareActivity__comma_s">, %1$s</string>
     <!-- Toast when the incoming intent is invalid -->
     <string name="ShareActivity__could_not_get_share_data_from_intent">ਇਨਟੈਂਟ ਤੋਂ ਸਾਂਝਾ ਕੀਤਾ ਡਾਟਾ ਪ੍ਰਾਪਤ ਨਹੀਂ ਕਰ ਸਕੇ।</string>
@@ -5476,6 +5490,7 @@
     <string name="SoundsAndNotificationsSettingsFragment__not_muted">ਮਿਊਟ ਨਹੀਂ ਹੈ</string>
     <string name="SoundsAndNotificationsSettingsFragment__mentions">ਹਵਾਲੇ</string>
     <string name="SoundsAndNotificationsSettingsFragment__always_notify">ਹਮੇਸ਼ਾਂ ਸੂਚਿਤ ਕਰੋ</string>
+    <!-- Dialog option to not send notifications if mentioned when the conversation is muted -->
     <string name="SoundsAndNotificationsSettingsFragment__do_not_notify">ਸੂਚਿਤ ਨਾ ਕਰੋ</string>
     <string name="SoundsAndNotificationsSettingsFragment__custom_notifications">ਕਸਟਮ ਸੂਚਨਾਵਾਂ </string>
 
@@ -5566,7 +5581,7 @@
     <!-- DSLSettingsToolbar -->
     <string name="DSLSettingsToolbar__navigate_up">ਉੱਤੇ ਜਾਓ</string>
     <string name="MultiselectForwardFragment__forward_to">ਅੱਗੇ ਭੇਜੋ</string>
-    <!-- Displayed when sharing content via the fragment -->
+    <!-- Displayed when sharing content to people via the fragment -->
     <string name="MultiselectForwardFragment__share_with">ਇਹਨਾਂ ਨਾਲ ਸ਼ੇਅਰ ਕਰੋ</string>
     <string name="MultiselectForwardFragment__add_a_message">ਸੁਨੇਹਾ ਜੋੜੋ</string>
     <string name="MultiselectForwardFragment__faster_forwards">ਵੱਧ ਤੇਜ਼ੀ ਨਾਲ ਅੱਗੇ</string>
@@ -6298,8 +6313,8 @@
     <string name="MyStorySettingsFragment__only_share_with_selected_people">ਸਿਰਫ਼ ਚੁਣੇ ਹੋਏ ਲੋਕਾਂ ਨਾਲ ਸਾਂਝਾ ਕਰੋ</string>
     <!-- Summary of clickable option displaying how many people you have included to send to in your story -->
     <plurals name="MyStorySettingsFragment__d_people">
-        <item quantity="one">%1$d viewer</item>
-        <item quantity="other">%1$d viewers</item>
+        <item quantity="one">%1$d ਦਰਸ਼ਕ</item>
+        <item quantity="other">%1$d ਦਰਸ਼ਕ</item>
     </plurals>
     <!-- My story privacy fine print about what the privacy settings are for -->
     <string name="MyStorySettingsFragment__choose_who_can_view_your_story">ਚੁਣੋ ਕਿ ਤੁਹਾਡੀ ਸਟੋਰੀ ਕੌਣ ਦੇਖ ਸਕਦਾ ਹੈ। ਤਬਦੀਲੀਆਂ ਉਹਨਾਂ ਸਟੋਰੀਆਂ ਨੂੰ ਪ੍ਰਭਾਵਿਤ ਨਹੀਂ ਕਰਨਗੀਆਂ ਜੋ ਤੁਸੀਂ ਪਹਿਲਾਂ ਹੀ ਭੇਜ ਚੁੱਕੇ ਹੋ।</string>
@@ -6430,7 +6445,7 @@
     <!-- Displayed when copying group story reply text to clipboard -->
     <string name="StoryGroupReplyFragment__copied_to_clipboard">ਕਲਿਪਬੋਰਡ ਤੇ ਕਾਪੀ ਕੀਤਾ ਗਿਆ</string>
     <!-- Displayed in story caption when content is longer than 5 lines -->
-    <string name="StoryViewerPageFragment__see_more">ਹੋਰ ਦੇਖੋ</string>
+    <string name="StoryViewerPageFragment__read_more">Read more</string>
     <!-- Displayed in toast after sending a direct reply -->
     <string name="StoryDirectReplyDialogFragment__sending_reply">ਜਵਾਬ ਭੇਜਿਆ ਜਾ ਰਿਹਾ ਹੈ…</string>
     <!-- Displayed in the viewer when a story is no longer available -->
@@ -7548,13 +7563,13 @@
     <!-- Content description for x icon at the end of the linear progress indicator -->
     <string name="BackupStatusRow__cancel_download">ਡਾਊਨਲੋਡ ਰੱਦ ਕਰੋ</string>
     <!-- Backup progress. Placeholders are size restored, size to restore, and percent, i.e. 50MB of 100MB (50%) -->
-    <string name="BackupStatusRow__restoring_s_of_s_s">Restoring: %1$s of %2$s (%3$s%%)</string>
+    <string name="BackupStatusRow__restoring_s_of_s_s">ਰੀਸਟੋਰ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ: %2$s ਵਿੱਚੋਂ %1$s (%3$s%%)</string>
     <!-- Text displayed under progress bar when restoring media pauses for Wi-Fi -->
-    <string name="BackupStatusRow__restore_waiting_for_wifi">Restore paused: Waiting for Wi-Fi…</string>
+    <string name="BackupStatusRow__restore_waiting_for_wifi">ਰੀਸਟੋਰ ਕਰਨਾ ਰੋਕਿਆ ਗਿਆ: Wi-Fi ਦੀ ਉਡੀਕ ਕੀਤੀ ਜਾ ਰਹੀ ਹੈ…</string>
     <!-- Text displayed under progress bar when restoring media pauses for internet -->
-    <string name="BackupStatusRow__restore_no_internet">Restore paused: No internet…</string>
+    <string name="BackupStatusRow__restore_no_internet">ਰੀਸਟੋਰ ਕਰਨਾ ਰੋਕਿਆ ਗਿਆ: ਇੰਟਰਨੈੱਟ ਉਪਲਬਧ ਨਹੀਂ ਹੈ…</string>
     <!-- Text displayed under progress bar when restoring media pauses for low battery -->
-    <string name="BackupStatusRow__restore_device_has_low_battery">Restore paused: Device has low battery</string>
+    <string name="BackupStatusRow__restore_device_has_low_battery">ਰੀਸਟੋਰ ਕਰਨਾ ਰੋਕਿਆ ਗਿਆ: ਡਿਵਾਈਸ ਦੀ ਬੈਟਰੀ ਘੱਟ ਹੈ</string>
     <!-- Notice that there is not enough free space to continue restore. Placeholder is required space, for example 1.6GB -->
     <string name="BackupStatusRow__not_enough_space">ਤੁਹਾਡੇ ਬੈਕਅੱਪ ਨੂੰ ਡਾਊਨਲੋਡ ਕਰਨ ਲਈ ਲੋੜੀਂਦੀ ਥਾਂ ਨਹੀਂ ਹੈ। ਜਾਰੀ ਰੱਖਣ ਲਈ %1$s ਥਾਂ ਖਾਲੀ ਕਰੋ।</string>
     <!-- Text row label to skip download -->
@@ -7659,12 +7674,14 @@
     <!-- RemoteBackupsSettingsFragment -->
     <!-- Displayed on the title bar -->
     <string name="RemoteBackupsSettingsFragment__signal_backups">Signal ਬੈਕਅੱਪ</string>
+    <!-- Text shown in a popup indicating that the user needs to enter their screen lock -->
+    <string name="RemoteBackupsSettingsFragment__authenticatino_required">Authentication required</string>
     <!-- Row label to launch payment history screen -->
     <string name="RemoteBackupsSettingsFragment__payment_history">ਭੁਗਤਾਨ ਦਾ ਇਤਿਹਾਸ</string>
     <!-- Section header for backup information -->
     <string name="RemoteBackupsSettingsFragment__backup_details">ਬੈਕਅੱਪ ਦੇ ਵੇਰਵੇ</string>
     <!-- Toggle row label to allow the restoration of a backup to occur while on cellular connection -->
-    <string name="RemoteBackupsSettingsFragment__restore_using_cellular">Restore using cellular</string>
+    <string name="RemoteBackupsSettingsFragment__restore_using_cellular">ਸੈਲੂਲਰ ਦੀ ਵਰਤੋਂ ਕਰਕੇ ਰੀਸਟੋਰ ਕਰੋ</string>
     <!-- Row label for backup size -->
     <string name="RemoteBackupsSettingsFragment__backup_size">ਬੈਕਅਪ ਦਾ ਆਕਾਰ</string>
     <!-- Row label for backup frequency -->
@@ -7773,11 +7790,11 @@
     <!-- Linear progress dialog text shown when creating a backup -->
     <string name="RemoteBackupsSettingsFragment__processing_backup">ਬੈਕਅੱਪ ਉੱਤੇ ਕਾਰਵਾਈ ਕੀਤੀ ਜਾ ਰਹੀ ਹੈ…</string>
     <!-- Linear progress dialog text shown when preparing a backup -->
-    <string name="RemoteBackupsSettingsFragment__preparing_backup">Preparing backup…</string>
+    <string name="RemoteBackupsSettingsFragment__preparing_backup">ਬੈਕਅੱਪ ਤਿਆਰ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ…</string>
     <!-- Linear progress dialog text shown when processing messages for backup. First placeholder is completed count, second is approximate total count, third is percent completed. -->
     <plurals name="RemoteBackupsSettingsFragment__processing_d_of_d_d_messages">
-        <item quantity="one">Processing %1$d of %2$d (%3$d%%) message</item>
-        <item quantity="other">Processing %1$d of %2$d (%3$d%%) messages</item>
+        <item quantity="one">%2$d ਵਿੱਚੋਂ %1$d (%3$d%%) ਸੁਨੇਹੇ ਉੱਤੇ ਕਾਰਵਾਈ ਕੀਤੀ ਜਾ ਰਹੀ ਹੈ</item>
+        <item quantity="other">%2$d ਵਿੱਚੋਂ %1$d (%3$d%%) ਸੁਨੇਹਿਆਂ ਉੱਤੇ ਕਾਰਵਾਈ ਕੀਤੀ ਜਾ ਰਹੀ ਹੈ</item>
     </plurals>
     <!-- Displayed in row when backup is available for download and users subscription has expired. First placeholder is data size e.g. 12MB, second is days before expiration -->
     <plurals name="RemoteBackupsSettingsFragment__you_have_s_of_backup_data">
@@ -7800,7 +7817,7 @@
     <!-- Dialog body for network error while trying to disable backups -->
     <string name="RemoteBackupsSettingsFragment__a_network_error_occurred">ਨੈੱਟਵਰਕ ਵਿੱਚ ਕੋਈ ਗੜਬੜ ਆ ਗਈ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਨੈੱਟਵਰਕ ਕਨੈਕਸ਼ਨ ਦੀ ਜਾਂਚ ਕਰੋ ਅਤੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।</string>
     <!-- Progress message when backup file is being uploaded. First placeholder and second placeholder are formatted byte sizes (2 MB) and third is percent completion. -->
-    <string name="RemoteBackupsSettingsFragment__uploading_s_of_s_d">Uploading: %1$s of %2$s (%3$d%%)</string>
+    <string name="RemoteBackupsSettingsFragment__uploading_s_of_s_d">ਅੱਪਲੋਡ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ: %2$s ਵਿੱਚੋਂ %1$s (%3$d%%)</string>
 
     <!-- SubscriptionNotFoundBottomSheet -->
     <!-- Displayed as a bottom sheet title -->
@@ -7987,7 +8004,7 @@
     <!-- Error button text to retry getting a qr code -->
     <string name="RestoreViaQr_retry">ਮੁੜ-ਕੋਸ਼ਿਸ਼ ਕਰੋ</string>
     <!-- Error message shown when register after receiving the provisioning message failed -->
-    <string name="RestoreViaQr_registration_error">An error occurred and your account couldn’t be transferred. Try again by scanning the QR code again.</string>
+    <string name="RestoreViaQr_registration_error">ਕਿਸੇ ਗੜਬੜ ਕਾਰਨ ਤੁਹਾਡਾ ਖਾਤਾ ਟ੍ਰਾਂਸਫਰ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ। QR ਕੋਡ ਫੇਰ ਸਕੈਨ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।</string>
 
     <!-- Old device Transfer account screen title -->
     <string name="TransferAccount_title">ਖਾਤਾ ਟ੍ਰਾਂਸਫਰ ਕਰੋ</string>
