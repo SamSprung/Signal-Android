@@ -13,6 +13,7 @@ import org.signal.core.util.requireInt
 import org.signal.core.util.requireLong
 import org.thoughtcrime.securesms.backup.v2.proto.Chat
 import org.thoughtcrime.securesms.backup.v2.util.ChatStyleConverter
+import org.thoughtcrime.securesms.backup.v2.util.clampToValidBackupRange
 import org.thoughtcrime.securesms.conversation.colors.ChatColors
 import org.thoughtcrime.securesms.database.RecipientTable
 import org.thoughtcrime.securesms.database.SignalDatabase
@@ -54,10 +55,10 @@ class ChatArchiveExporter(private val cursor: Cursor, private val db: SignalData
       id = cursor.requireLong(ThreadTable.ID),
       recipientId = cursor.requireLong(ThreadTable.RECIPIENT_ID),
       archived = cursor.requireBoolean(ThreadTable.ARCHIVED),
-      pinnedOrder = cursor.requireInt(ThreadTable.PINNED),
+      pinnedOrder = cursor.requireInt(ThreadTable.PINNED).takeIf { it > 0 },
       expirationTimerMs = cursor.requireLong(RecipientTable.MESSAGE_EXPIRATION_TIME).seconds.inWholeMilliseconds.takeIf { it > 0 },
       expireTimerVersion = cursor.requireInt(RecipientTable.MESSAGE_EXPIRATION_TIME_VERSION),
-      muteUntilMs = cursor.requireLong(RecipientTable.MUTE_UNTIL).takeIf { it > 0 },
+      muteUntilMs = cursor.requireLong(RecipientTable.MUTE_UNTIL).takeIf { it > 0 }?.clampToValidBackupRange(),
       markedUnread = ThreadTable.ReadStatus.deserialize(cursor.requireInt(ThreadTable.READ)) == ThreadTable.ReadStatus.FORCED_UNREAD,
       dontNotifyForMentionsIfMuted = RecipientTable.MentionSetting.DO_NOT_NOTIFY.id == cursor.requireInt(RecipientTable.MENTION_SETTING),
       style = ChatStyleConverter.constructRemoteChatStyle(
