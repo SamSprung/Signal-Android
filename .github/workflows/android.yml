@@ -78,7 +78,7 @@ jobs:
         # override default build-tools version (29.0.3) -- optional
         BUILD_TOOLS_VERSION: "34.0.0"
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: Signal-Android-${{ env.GIT_HASH }}
         retention-days: 1
