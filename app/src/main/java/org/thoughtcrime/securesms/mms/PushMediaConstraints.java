@@ -124,12 +124,12 @@ public class PushMediaConstraints extends MediaConstraints {
   }
 
   public enum MediaConfig {
-    LEVEL_1_LOW_MEMORY(true, 1, (5 * MB), IMAGE_DIMEN(3000), 75, TranscodingPreset.LEVEL_1),
+    LEVEL_1_LOW_MEMORY(true, 1, (10 * MB), IMAGE_DIMEN(4032), 100, TranscodingPreset.LEVEL_1),
 
-    LEVEL_1(false, 1, (10 * MB), IMAGE_DIMEN(6000), 75, TranscodingPreset.LEVEL_1),
-    LEVEL_2(false, 2, (int) (15 * MB), IMAGE_DIMEN(9000), 75, TranscodingPreset.LEVEL_2),
-    LEVEL_3(false, 3, (int) (20 * MB), IMAGE_DIMEN(12000), 100, TranscodingPreset.LEVEL_3),
-    LEVEL_3_H265(false, 4, (int) (20 * MB), IMAGE_DIMEN(12000), 100, TranscodingPreset.LEVEL_3_H265);
+    LEVEL_1(false, 1, (25 * MB), IMAGE_DIMEN(4032), 100, TranscodingPreset.LEVEL_1),
+    LEVEL_2(false, 2, (int) (50 * MB), IMAGE_DIMEN(8192), 100, TranscodingPreset.LEVEL_2),
+    LEVEL_3(false, 3, (int) (75 * MB), IMAGE_DIMEN(16320), 100, TranscodingPreset.LEVEL_3),
+    LEVEL_3_H265(false, 4, (int) (75 * MB), IMAGE_DIMEN(16320), 100, TranscodingPreset.LEVEL_3_H265);
 
     private final boolean           isLowMemory;
     private final int               level;
