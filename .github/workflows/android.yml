@@ -38,6 +38,9 @@ jobs:
         distribution: temurin
         java-version: 21
 
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+
     - name: Validate Gradle Wrapper
       uses: gradle/actions/wrapper-validation@3f131e8634966bd73d06cc69884922b02e6faf92 # v6
       # gh api repos/gradle/actions/commits/v6 --jq '.sha'
@@ -69,7 +72,7 @@ jobs:
         gradle-version: wrapper
         # Properties are passed as -Pname=value
         properties: |
-          org.gradle.unsafe.configuration-cache=true
+          org.gradle.configuration-cache=true
 
     - uses: r0adkll/sign-android-release@v1
       name: Sign app APK
