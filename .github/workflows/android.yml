@@ -36,6 +36,9 @@ jobs:
         java-version: 17
         cache: gradle
 
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+
     - name: Validate Gradle Wrapper
       uses: gradle/actions/wrapper-validation@v5
 
@@ -62,7 +65,7 @@ jobs:
         gradle-version: wrapper
         # Properties are passed as -Pname=value
         properties: |
-          org.gradle.unsafe.configuration-cache=true
+          org.gradle.configuration-cache=true
 
     - uses: r0adkll/sign-android-release@v1
       name: Sign app APK
