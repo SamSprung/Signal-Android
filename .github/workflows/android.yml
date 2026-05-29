@@ -48,7 +48,10 @@ jobs:
     - name: Decode Keystore File
       run: echo "${{ secrets.KEYSTORE }}" | base64 -d > $GITHUB_WORKSPACE/key.keystore
 
-    - uses: burrunan/gradle-cache-action@v1
+    - name: Write verification metadata
+      run: ./gradlew --write-verification-metadata sha256 clean --rerun-tasks
+
+    - uses: burrunan/gradle-cache-action@v3
       name: Build with Gradle
       # Extra environment variables for Gradle execution (regular GitHub Actions feature)
       # Note: env must be outside of "with"
