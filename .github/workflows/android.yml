@@ -6,7 +6,6 @@ on:
     - 'main'
 
 permissions:
-  actions: write
   contents: write
 
 concurrency:
@@ -40,34 +39,54 @@ jobs:
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
 
-    - name: Validate Gradle Wrapper
-      uses: gradle/actions/wrapper-validation@50e97c2cd7a37755bbfafc9c5b7cafaece252f6e # v6
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@50e97c2cd7a37755bbfafc9c5b7cafaece252f6e # v6.1.0
       # gh api repos/gradle/actions/commits/v6 --jq '.sha'
+      with:
+        cache-provider: basic
 
     - name: Decode Keystore File
-      run: echo "${{ secrets.KEYSTORE }}" | base64 -d > $GITHUB_WORKSPACE/key.keystore
+      env:
+        KEYSTORE: ${{ secrets.KEYSTORE }}
+      run: printf '%s' "$KEYSTORE" | base64 -d > "$GITHUB_WORKSPACE/key.keystore"
 
-    - uses: burrunan/gradle-cache-action@v1
-      name: Build with Gradle
-      # Extra environment variables for Gradle execution (regular GitHub Actions feature)
-      # Note: env must be outside of "with"
-      with:
-        job-id: Signal
-        # Specifies arguments for Gradle execution
-        arguments: |
+    - name: Build with Gradle
+      timeout-minutes: 90
+      env:
+        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        KEY_ALIAS: ${{ secrets.KEYALIAS }}
+        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      run: |
+        set -euo pipefail
+
+        gradle_args=(
+          --build-cache
+          --console=plain
           --parallel
+          --max-workers=2
+          --stacktrace
           assembleBitProdRelease
-          -Pandroid.injected.signing.store.file=${{ github.workspace }}/key.keystore
-          -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }}
-          -Pandroid.injected.signing.key.alias=${{ secrets.KEYALIAS }}
-          -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
-        # Gradle version to use for execution:
-        #   wrapper (default), current, rc, nightly, release-nightly, or
-        #   versions like 6.6 (see https://services.gradle.org/versions/all)
-        gradle-version: wrapper
-        # Properties are passed as -Pname=value
-        properties: |
-          org.gradle.configuration-cache=true
+          "-Dorg.gradle.jvmargs=-Xmx6g -Xms256m -XX:MaxMetaspaceSize=768m -Dcom.android.tools.r8.threadCount=1 -XX:+UnlockExperimentalVMOptions -XX:hashCode=3"
+          "-Dkotlin.daemon.jvmargs=-Xmx2g -XX:MaxMetaspaceSize=512m"
+          "-Pandroid.injected.signing.store.file=${GITHUB_WORKSPACE}/key.keystore"
+          "-Pandroid.injected.signing.store.password=${KEYSTORE_PASSWORD}"
+          "-Pandroid.injected.signing.key.alias=${KEY_ALIAS}"
+          "-Pandroid.injected.signing.key.password=${KEY_PASSWORD}"
+        )
+
+        ./gradlew "${gradle_args[@]}" &
+        gradle_pid=$!
+
+        trap 'kill -TERM "$gradle_pid" 2>/dev/null || true; wait "$gradle_pid" 2>/dev/null || true' INT TERM
+
+        while kill -0 "$gradle_pid" 2>/dev/null; do
+          sleep 60
+          if kill -0 "$gradle_pid" 2>/dev/null; then
+            echo "::notice::Gradle build still running..."
+          fi
+        done
+
+        wait "$gradle_pid"
 
     - uses: r0adkll/sign-android-release@v1
       name: Sign app APK
@@ -97,16 +116,3 @@ jobs:
         title: Signal-Android-${{ env.GIT_HASH }}
         files: ${{steps.sign_app.outputs.signedReleaseFile}}
 
-  clean:
-    needs: build
-    runs-on: ubuntu-latest
-    env:
-      CI: true
-    steps:
-
-    - name: Purge build cache
-      continue-on-error: true
-      uses: MyAlbum/purge-cache@v2
-      with:
-        max-age: 172800 # 1 day, default: 7 days since last use
-        token: ${{ secrets.GITHUB_TOKEN }}
