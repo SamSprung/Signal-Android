@@ -19,9 +19,9 @@ jobs:
         uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
         with:
           context: reproducible-builds
-          tags: signal-android
           load: true
+          tags: signal-android:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Test build
-        run: docker run --memory=12g --rm -v "$(pwd)":/project -w /project signal-android ./gradlew --no-daemon --max-workers=1 -Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=512m" -Dkotlin.compiler.execution.strategy=in-process bundlePlayProdRelease
+        run: docker run --memory=12g --rm -v "$(pwd)":/project -w /project signal-android:latest ./gradlew --no-daemon --max-workers=1 -Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=512m" -Dkotlin.compiler.execution.strategy=in-process bundlePlayProdRelease
