@@ -48,8 +48,8 @@ object ApkUpdateInstaller {
       return
     }
 
-    if (!Objects.equals(BuildConfig.BUILD_DISTRIBUTION_TYPE, "eightbit")) {
     val digest = SignalStore.apkUpdate.digest
+    if (!Objects.equals(BuildConfig.BUILD_DISTRIBUTION_TYPE, "eightbit")) {
     if (digest == null) {
       Log.w(TAG, "DownloadId matches, but digest is null! Inconsistent state. Failing and clearing state.")
       SignalStore.apkUpdate.clearDownloadAttributes()
@@ -76,6 +76,10 @@ object ApkUpdateInstaller {
       ApkUpdateNotifications.showInstallPrompt(context, downloadId)
       return
     }
+    } else if (!userInitiated && !shouldAutoUpdate()) {
+      ApkUpdateNotifications.showInstallPrompt(context, downloadId)
+      return
+    }
 
     try {
       context
@@ -84,11 +88,13 @@ object ApkUpdateInstaller {
         .use { parcelFileDescriptor ->
           val stream = FileInputStream(parcelFileDescriptor.fileDescriptor)
 
+          if (!Objects.equals(BuildConfig.BUILD_DISTRIBUTION_TYPE, "eightbit")) {
           if (!MessageDigest.isEqual(FileUtils.getFileDigest(stream), digest)) {
             Log.w(TAG, "DownloadId matches, but digest does not! Bad download or inconsistent state. Failing and clearing state.")
             SignalStore.apkUpdate.clearDownloadAttributes()
             ApkUpdateNotifications.showInstallFailed(context, ApkUpdateNotifications.FailureReason.UNKNOWN)
             return
+          }
           }
 
           stream.channel.position(0)
