@@ -235,7 +235,13 @@ class MessageNotification(threadRecipient: Recipient, record: MessageRecord) : N
     } else if (record.isRemoteDelete) {
       SpanUtil.italic(context.getString(R.string.MessageNotifier_this_message_was_deleted))
     } else if (record.isMms && !record.isMmsNotification && (record as MmsMessageRecord).slideDeck.slides.isNotEmpty()) {
-      ThreadBodyUtil.getFormattedBodyForNotification(context, record, getBodyWithMentionsAndStyles(context, record))
+      val bodyOverride = if (SignalStore.settings.isMessageNotificationImagePreviewEnabled) {
+        getBodyWithMentionsAndStyles(context, record)
+      } else {
+        null
+      }
+
+      ThreadBodyUtil.getFormattedBodyForNotification(context, record, bodyOverride)
     } else if (record.isGroupCall) {
       MessageRecord.getGroupCallUpdateDescription(context, record.body, false).spannable
     } else if (record.hasGiftBadge()) {
@@ -280,7 +286,7 @@ class MessageNotification(threadRecipient: Recipient, record: MessageRecord) : N
   }
 
   override fun getThumbnailInfo(context: Context): ThumbnailInfo {
-    return if (SignalStore.settings.messageNotificationsPrivacy.isDisplayMessage && !KeyCachingService.isLocked(context)) {
+    return if (SignalStore.settings.messageNotificationsPrivacy.isDisplayMessage && !KeyCachingService.isLocked(context) && SignalStore.settings.isMessageNotificationImagePreviewEnabled) {
       if (thumbnailInfo.needsShrinking) {
         thumbnailInfo = NotificationThumbnails.get(context, this)
       }
