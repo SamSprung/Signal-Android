@@ -15,7 +15,6 @@ import org.thoughtcrime.securesms.util.BitmapDecodingException
 import org.thoughtcrime.securesms.util.ImageCompressionUtil
 import org.thoughtcrime.securesms.util.RemoteConfig
 import org.thoughtcrime.securesms.util.kb
-import org.thoughtcrime.securesms.util.mb
 
 /**
  * Creates and caches attachment thumbnails solely for use by Notifications.
@@ -30,7 +29,6 @@ object NotificationThumbnails {
 
   private const val MAX_CACHE_SIZE = 16
   private val TARGET_SIZE = 128.kb
-  private val SUPPORTED_SIZE_THRESHOLD = 1.mb
 
   private val executor = SignalExecutors.BOUNDED_IO
 
@@ -52,10 +50,6 @@ object NotificationThumbnails {
     }
 
     if (thumbnailSlide == null || thumbnailSlide.uri == null) {
-      return NotificationItem.ThumbnailInfo.NONE
-    }
-
-    if (thumbnailSlide.fileSize > SUPPORTED_SIZE_THRESHOLD) {
       return NotificationItem.ThumbnailInfo.NONE
     }
 
@@ -81,11 +75,6 @@ object NotificationThumbnails {
     val thumbnailSlide: Slide? = notificationItem.slideDeck?.thumbnailSlide
 
     if (thumbnailSlide == null || thumbnailSlide.uri == null) {
-      return NotificationItem.ThumbnailInfo.NONE
-    }
-
-    if (thumbnailSlide.fileSize > SUPPORTED_SIZE_THRESHOLD) {
-      Log.i(TAG, "Source attachment too large for notification")
       return NotificationItem.ThumbnailInfo.NONE
     }
 
