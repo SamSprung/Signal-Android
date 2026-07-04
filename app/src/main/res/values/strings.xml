@@ -5931,6 +5931,7 @@
     <string name="NotificationsSettingsFragment__calls">Calls</string>
     <string name="NotificationsSettingsFragment__notify_when">Notify when…</string>
     <string name="NotificationsSettingsFragment__contact_joins_signal">Contact joins Signal</string>
+    <string name="NotificationsSettingsFragment__show_image_previews">Show image previews</string>
     <!-- Notification preference header -->
     <string name="NotificationsSettingsFragment__notification_profiles">Notification profiles</string>
     <!-- Notification preference option header -->

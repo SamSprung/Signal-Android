@@ -60,6 +60,7 @@ public final class SettingsValues extends SignalStoreValues {
   public static final  String MESSAGE_IN_CHAT_SOUNDS_ENABLED          = "settings.message.in.chats.sounds.enabled";
   public static final  String MESSAGE_REPEAT_ALERTS                   = "settings.message.repeat.alerts";
   public static final  String MESSAGE_NOTIFICATION_PRIVACY            = "settings.message.notification.privacy";
+  public static final  String MESSAGE_NOTIFICATION_IMAGE_PREVIEW_ENABLED = "settings.message.notification.image.preview.enabled";
   public static final  String CALL_NOTIFICATIONS_ENABLED              = "settings.call.notifications.enabled";
   public static final  String CALL_RINGTONE                           = "settings.call.ringtone";
   public static final  String CALL_VIBRATE_ENABLED                    = "settings.call.vibrate.enabled";
@@ -441,6 +442,14 @@ public final class SettingsValues extends SignalStoreValues {
 
   public void setMessageNotificationsPrivacy(@NonNull NotificationPrivacyPreference messageNotificationsPrivacy) {
     putString(MESSAGE_NOTIFICATION_PRIVACY, messageNotificationsPrivacy.toString());
+  }
+
+  public boolean isMessageNotificationImagePreviewEnabled() {
+    return getBoolean(MESSAGE_NOTIFICATION_IMAGE_PREVIEW_ENABLED, true);
+  }
+
+  public void setMessageNotificationImagePreviewEnabled(boolean enabled) {
+    putBoolean(MESSAGE_NOTIFICATION_IMAGE_PREVIEW_ENABLED, enabled);
   }
 
   public boolean isCallNotificationsEnabled() {
