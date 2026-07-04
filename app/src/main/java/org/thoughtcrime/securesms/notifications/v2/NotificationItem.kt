@@ -280,7 +280,7 @@ class MessageNotification(threadRecipient: Recipient, record: MessageRecord) : N
   }
 
   override fun getThumbnailInfo(context: Context): ThumbnailInfo {
-    return if (SignalStore.settings.messageNotificationsPrivacy.isDisplayMessage && !KeyCachingService.isLocked(context)) {
+    return if (SignalStore.settings.messageNotificationsPrivacy.isDisplayMessage && !KeyCachingService.isLocked(context) && SignalStore.settings.isMessageNotificationImagePreviewEnabled) {
       if (thumbnailInfo.needsShrinking) {
         thumbnailInfo = NotificationThumbnails.get(context, this)
       }

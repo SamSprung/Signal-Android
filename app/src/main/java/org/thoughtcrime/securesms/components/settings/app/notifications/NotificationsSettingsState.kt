@@ -19,7 +19,8 @@ data class MessageNotificationsState(
   val repeatAlerts: Int,
   val messagePrivacy: String,
   val priority: Int,
-  val troubleshootNotifications: Boolean
+  val troubleshootNotifications: Boolean,
+  val showImagePreviews: Boolean
 )
 
 data class CallNotificationsState(

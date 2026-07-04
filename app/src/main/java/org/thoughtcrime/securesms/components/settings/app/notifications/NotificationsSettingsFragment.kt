@@ -236,6 +236,10 @@ open class DefaultNotificationsSettingsCallbacks(
     viewModel.setMessageNotificationPrivacy(selection)
   }
 
+  override fun setMessageNotificationImagePreviewEnabled(enabled: Boolean) {
+    viewModel.setMessageNotificationImagePreviewEnabled(enabled)
+  }
+
   override fun onTroubleshootNotificationsClick() {
     PromptBatterySaverDialogFragment.show(activity.supportFragmentManager)
   }
@@ -279,6 +283,7 @@ interface NotificationsSettingsCallbacks {
   fun setMessageNotificationInChatSoundsEnabled(enabled: Boolean) = Unit
   fun setMessageRepeatAlerts(selection: String) = Unit
   fun setMessageNotificationPrivacy(selection: String) = Unit
+  fun setMessageNotificationImagePreviewEnabled(enabled: Boolean) = Unit
   fun onTroubleshootNotificationsClick() = Unit
   fun launchNotificationPriorityIntent() = Unit
   fun setMessageNotificationPriority(selection: String) = Unit
@@ -422,6 +427,15 @@ fun NotificationsSettingsScreen(
           selectedValue = state.messageNotificationsState.messagePrivacy,
           enabled = state.messageNotificationsState.notificationsEnabled,
           onSelected = callbacks::setMessageNotificationPrivacy
+        )
+      }
+
+      item {
+        Rows.ToggleRow(
+          text = stringResource(R.string.NotificationsSettingsFragment__show_image_previews),
+          checked = state.messageNotificationsState.showImagePreviews,
+          enabled = state.messageNotificationsState.notificationsEnabled,
+          onCheckChanged = callbacks::setMessageNotificationImagePreviewEnabled
         )
       }
 
@@ -594,7 +608,8 @@ private fun rememberTestState(): NotificationsSettingsState = remember {
       repeatAlerts = 1,
       messagePrivacy = "",
       priority = 1,
-      troubleshootNotifications = true
+      troubleshootNotifications = true,
+      showImagePreviews = true
     ),
     callNotificationsState = CallNotificationsState(
       notificationsEnabled = true,

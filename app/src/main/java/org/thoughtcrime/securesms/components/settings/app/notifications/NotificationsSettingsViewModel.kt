@@ -86,6 +86,11 @@ class NotificationsSettingsViewModel(private val sharedPreferences: SharedPrefer
     refresh()
   }
 
+  fun setMessageNotificationImagePreviewEnabled(enabled: Boolean) {
+    SignalStore.settings.isMessageNotificationImagePreviewEnabled = enabled
+    refresh()
+  }
+
   fun setMessageNotificationPriority(priority: Int) {
     sharedPreferences.edit().putString(TextSecurePreferences.NOTIFICATION_PRIORITY_PREF, priority.toString()).apply()
     refresh()
@@ -135,7 +140,8 @@ class NotificationsSettingsViewModel(private val sharedPreferences: SharedPrefer
         currentState.messageNotificationsState.troubleshootNotifications
       } else {
         false
-      }
+      },
+      showImagePreviews = SignalStore.settings.isMessageNotificationImagePreviewEnabled
     ),
     callNotificationsState = CallNotificationsState(
       notificationsEnabled = SignalStore.settings.isCallNotificationsEnabled && canEnableNotifications(),
