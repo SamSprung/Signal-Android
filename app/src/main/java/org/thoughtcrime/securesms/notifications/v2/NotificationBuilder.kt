@@ -200,10 +200,9 @@ sealed class NotificationBuilder(protected val context: Context) {
    */
   private class NotificationBuilderCompat(context: Context) : NotificationBuilder(context) {
     val builder: NotificationCompat.Builder = NotificationCompat.Builder(context, NotificationChannels.getInstance().messagesChannel)
+    private val wearableExtender: NotificationCompat.WearableExtender = NotificationCompat.WearableExtender()
 
     override fun addActions(replyMethod: ReplyMethod, conversation: NotificationConversation) {
-      val extender: NotificationCompat.WearableExtender = NotificationCompat.WearableExtender()
-
       addMarkAsReadActionActual(conversation)
 
       if (conversation.mostRecentNotification.canReply(context)) {
@@ -231,11 +230,9 @@ sealed class NotificationBuilder(protected val context: Context) {
             .addRemoteInput(RemoteInput.Builder(DefaultMessageNotifier.EXTRA_REMOTE_REPLY).setLabel(label).build())
             .build()
 
-          extender.addAction(wearableReplyAction)
+          wearableExtender.addAction(wearableReplyAction)
         }
       }
-
-      builder.extend(extender)
     }
 
     override fun addMarkAsReadActionActual(conversation: NotificationConversation) {
@@ -248,7 +245,7 @@ sealed class NotificationBuilder(protected val context: Context) {
             .build()
 
         builder.addAction(markAsReadAction)
-        builder.extend(NotificationCompat.WearableExtender().addAction(markAsReadAction))
+        wearableExtender.addAction(markAsReadAction)
       }
     }
 
@@ -258,7 +255,7 @@ sealed class NotificationBuilder(protected val context: Context) {
       if (markAsRead != null) {
         val markAllAsReadAction = NotificationCompat.Action(CoreUiR.drawable.symbol_check_24, context.getString(R.string.MessageNotifier_mark_all_as_read), markAsRead)
         builder.addAction(markAllAsReadAction)
-        builder.extend(NotificationCompat.WearableExtender().addAction(markAllAsReadAction))
+        wearableExtender.addAction(markAllAsReadAction)
       }
     }
 
@@ -277,11 +274,26 @@ sealed class NotificationBuilder(protected val context: Context) {
     override fun addMessagesActual(conversation: NotificationConversation, includeShortcut: Boolean) {
       val bigPictureUri: Uri? = conversation.getSlideBigPictureUri(context)
       if (bigPictureUri != null) {
+        val bigPicture = bigPictureUri.toBitmap(context, BIG_PICTURE_DIMEN)
         builder.setStyle(
           NotificationCompat.BigPictureStyle()
-            .bigPicture(bigPictureUri.toBitmap(context, BIG_PICTURE_DIMEN))
+            .bigPicture(bigPicture)
             .setSummaryText(conversation.getContentText(context))
             .bigLargeIcon(null as Bitmap?)
+        )
+        wearableExtender.setBackground(bigPicture)
+        wearableExtender.addPage(
+          NotificationCompat.Builder(context, NotificationChannels.getInstance().messagesChannel)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setContentTitle(conversation.getContentTitle(context))
+            .setContentText(conversation.getContentText(context))
+            .setStyle(
+              NotificationCompat.BigPictureStyle()
+                .bigPicture(bigPicture)
+                .setSummaryText(conversation.getContentText(context))
+                .bigLargeIcon(null as Bitmap?)
+            )
+            .build()
         )
         return
       }
@@ -483,6 +495,7 @@ sealed class NotificationBuilder(protected val context: Context) {
     }
 
     override fun build(): Notification {
+      builder.extend(wearableExtender)
       return builder.build()
     }
 
