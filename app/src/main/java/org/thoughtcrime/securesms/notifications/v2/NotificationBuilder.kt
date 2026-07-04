@@ -282,19 +282,7 @@ sealed class NotificationBuilder(protected val context: Context) {
             .bigLargeIcon(null as Bitmap?)
         )
         wearableExtender.setBackground(bigPicture)
-        wearableExtender.addPage(
-          NotificationCompat.Builder(context, NotificationChannels.getInstance().messagesChannel)
-            .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle(conversation.getContentTitle(context))
-            .setContentText(conversation.getContentText(context))
-            .setStyle(
-              NotificationCompat.BigPictureStyle()
-                .bigPicture(bigPicture)
-                .setSummaryText(conversation.getContentText(context))
-                .bigLargeIcon(null as Bitmap?)
-            )
-            .build()
-        )
+        wearableExtender.setHintShowBackgroundOnly(true)
         return
       }
 
