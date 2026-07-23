@@ -71,7 +71,7 @@ sealed class NotificationItem(val threadRecipient: Recipient, protected val reco
   abstract fun getStartingPosition(context: Context): Int
   abstract fun getLargeIconUri(): Uri?
   abstract fun getBigPictureUri(): Uri?
-  abstract fun getThumbnailInfo(context: Context): ThumbnailInfo
+  abstract fun getThumbnailInfos(context: Context): List<ThumbnailInfo>
   abstract fun canReply(context: Context): Boolean
 
   protected fun getMessageContentType(messageRecord: MmsMessageRecord): String {
@@ -239,7 +239,7 @@ class MessageNotification(threadRecipient: Recipient, record: MessageRecord, val
   val isReplyToSelf = record is MmsMessageRecord && threadRecipient.isGroup && record.quote?.author == Recipient.self().id
   val hasSelfMention = record.hasSelfMention()
 
-  private var thumbnailInfo: ThumbnailInfo = NotificationThumbnails.getWithoutModifying(this)
+  private var thumbnailInfos: List<ThumbnailInfo> = NotificationThumbnails.getWithoutModifying(this)
 
   override fun getPrimaryTextActual(context: Context): CharSequence {
     return if (KeyCachingService.isLocked(context)) {
@@ -298,15 +298,15 @@ class MessageNotification(threadRecipient: Recipient, record: MessageRecord, val
     return if (slide?.isInProgress == false) slide.uri else null
   }
 
-  override fun getThumbnailInfo(context: Context): ThumbnailInfo {
+  override fun getThumbnailInfos(context: Context): List<ThumbnailInfo> {
     return if (SignalStore.settings.messageNotificationsPrivacy.isDisplayMessage && !KeyCachingService.isLocked(context)) {
-      if (thumbnailInfo.needsShrinking) {
-        thumbnailInfo = NotificationThumbnails.get(context, this)
+      if (thumbnailInfos.any { it.needsShrinking }) {
+        thumbnailInfos = NotificationThumbnails.get(context, this)
       }
 
-      thumbnailInfo
+      thumbnailInfos
     } else {
-      ThumbnailInfo.NONE
+      emptyList()
     }
   }
 
@@ -328,7 +328,7 @@ class MessageNotification(threadRecipient: Recipient, record: MessageRecord, val
   }
 
   override fun hasSameContent(other: NotificationItem): Boolean {
-    return super.hasSameContent(other) && thumbnailInfo == (other as? MessageNotification)?.thumbnailInfo
+    return super.hasSameContent(other) && thumbnailInfos == (other as? MessageNotification)?.thumbnailInfos
   }
 
   override fun toString(): String {
@@ -400,7 +400,7 @@ class ReactionNotification(threadRecipient: Recipient, record: MessageRecord, va
 
   override fun getLargeIconUri(): Uri? = null
   override fun getBigPictureUri(): Uri? = null
-  override fun getThumbnailInfo(context: Context): ThumbnailInfo = ThumbnailInfo()
+  override fun getThumbnailInfos(context: Context): List<ThumbnailInfo> = emptyList()
   override fun canReply(context: Context): Boolean = false
 
   override fun toString(): String {
@@ -430,7 +430,7 @@ class VoteNotification(threadRecipient: Recipient, record: MessageRecord, val vo
 
   override fun getLargeIconUri(): Uri? = null
   override fun getBigPictureUri(): Uri? = null
-  override fun getThumbnailInfo(context: Context): ThumbnailInfo = ThumbnailInfo()
+  override fun getThumbnailInfos(context: Context): List<ThumbnailInfo> = emptyList()
   override fun canReply(context: Context): Boolean = false
 
   override fun toString(): String {
