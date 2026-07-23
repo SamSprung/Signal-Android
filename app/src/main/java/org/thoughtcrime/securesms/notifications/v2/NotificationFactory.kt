@@ -217,6 +217,35 @@ object NotificationFactory {
     return ((conversation.hasNewNotifications() && canAlertBasedOnTime) || alertOverride) && !conversation.mostRecentNotification.authorRecipient.isSelf
   }
 
+  private data class ConversationNotificationPresentation(
+    val contentText: CharSequence?,
+    val includeMediaContent: Boolean,
+    val ticker: CharSequence?
+  )
+
+  private fun NotificationConversation.getNotificationPresentation(context: Context): ConversationNotificationPresentation {
+    if (!hasImagePreview(context)) {
+      return ConversationNotificationPresentation(
+        contentText = getContentText(context),
+        includeMediaContent = true,
+        ticker = mostRecentNotification.getStyledPrimaryText(context, true)
+      )
+    }
+
+    return when (WearableNotificationBridgePolicy.getImagePreviewPresentation(context)) {
+      WearableNotificationBridgePolicy.ImagePreviewPresentation.MEDIA -> ConversationNotificationPresentation(
+        contentText = null,
+        includeMediaContent = true,
+        ticker = null
+      )
+      WearableNotificationBridgePolicy.ImagePreviewPresentation.TEXT_ONLY_FALLBACK -> ConversationNotificationPresentation(
+        contentText = getContentText(context),
+        includeMediaContent = false,
+        ticker = null
+      )
+    }
+  }
+
   @WorkerThread
   private fun notifyForConversation(
     context: Context,
@@ -230,6 +259,7 @@ object NotificationFactory {
     }
 
     val builder: NotificationBuilder = NotificationBuilder.create(context)
+    val presentation: ConversationNotificationPresentation = conversation.getNotificationPresentation(context)
 
     builder.apply {
       setSmallIcon(R.drawable.ic_notification)
@@ -249,18 +279,18 @@ object NotificationFactory {
 
       setContentInfo(conversation.messageCount.toString())
       setNumber(conversation.messageCount)
-      setContentText(conversation.getContentText(context))
+      setContentText(presentation.contentText)
       setContentIntent(conversation.getPendingIntent(context))
       setDeleteIntent(conversation.getDeleteIntent(context))
       setSortKey(conversation.sortKey.toString())
       setWhen(conversation)
       addReplyActions(conversation)
       setOnlyAlertOnce(!shouldAlert)
-      addMessages(conversation)
+      addMessages(conversation, includeMediaContent = presentation.includeMediaContent)
       setPriority(TextSecurePreferences.getNotificationPriority(context))
       setLights()
       setAlarms(conversation.recipient)
-      setTicker(conversation.mostRecentNotification.getStyledPrimaryText(context, true))
+      setTicker(presentation.ticker)
       setBubbleMetadata(conversation, if (targetThread == conversation.thread) defaultBubbleState else BubbleUtil.BubbleState.HIDDEN)
     }
 

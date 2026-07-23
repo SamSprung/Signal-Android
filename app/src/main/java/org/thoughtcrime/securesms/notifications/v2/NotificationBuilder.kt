@@ -3,6 +3,7 @@ package org.thoughtcrime.securesms.notifications.v2
 import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
@@ -13,6 +14,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.annotation.WorkerThread
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.RemoteInput
 import androidx.core.content.LocusIdCompat
 import androidx.core.graphics.drawable.IconCompat
@@ -82,7 +84,7 @@ sealed class NotificationBuilder(protected val context: Context) {
   protected abstract fun addActions(replyMethod: ReplyMethod, conversation: NotificationConversation)
   protected abstract fun addMarkAsReadActionActual(conversation: NotificationConversation)
   protected abstract fun addMarkAsReadActionActual(state: NotificationState)
-  protected abstract fun addMessagesActual(conversation: NotificationConversation, includeShortcut: Boolean)
+  protected abstract fun addMessagesActual(conversation: NotificationConversation, includeShortcut: Boolean, includeMediaContent: Boolean)
   protected abstract fun addMessagesActual(state: NotificationState)
 
   @WorkerThread
@@ -145,8 +147,8 @@ sealed class NotificationBuilder(protected val context: Context) {
     }
   }
 
-  fun addMessages(conversation: NotificationConversation) {
-    addMessagesActual(conversation, privacy.isDisplayContact)
+  fun addMessages(conversation: NotificationConversation, includeMediaContent: Boolean = true) {
+    addMessagesActual(conversation, privacy.isDisplayContact, includeMediaContent)
   }
 
   fun addMessages(state: NotificationState) {
@@ -200,10 +202,9 @@ sealed class NotificationBuilder(protected val context: Context) {
    */
   private class NotificationBuilderCompat(context: Context) : NotificationBuilder(context) {
     val builder: NotificationCompat.Builder = NotificationCompat.Builder(context, NotificationChannels.getInstance().messagesChannel)
+    private val wearableExtender: NotificationCompat.WearableExtender = NotificationCompat.WearableExtender()
 
     override fun addActions(replyMethod: ReplyMethod, conversation: NotificationConversation) {
-      val extender: NotificationCompat.WearableExtender = NotificationCompat.WearableExtender()
-
       addMarkAsReadActionActual(conversation)
 
       if (conversation.mostRecentNotification.canReply(context)) {
@@ -231,11 +232,9 @@ sealed class NotificationBuilder(protected val context: Context) {
             .addRemoteInput(RemoteInput.Builder(DefaultMessageNotifier.EXTRA_REMOTE_REPLY).setLabel(label).build())
             .build()
 
-          extender.addAction(wearableReplyAction)
+          wearableExtender.addAction(wearableReplyAction)
         }
       }
-
-      builder.extend(extender)
     }
 
     override fun addMarkAsReadActionActual(conversation: NotificationConversation) {
@@ -248,7 +247,7 @@ sealed class NotificationBuilder(protected val context: Context) {
             .build()
 
         builder.addAction(markAsReadAction)
-        builder.extend(NotificationCompat.WearableExtender().addAction(markAsReadAction))
+        wearableExtender.addAction(markAsReadAction)
       }
     }
 
@@ -258,7 +257,7 @@ sealed class NotificationBuilder(protected val context: Context) {
       if (markAsRead != null) {
         val markAllAsReadAction = NotificationCompat.Action(CoreUiR.drawable.symbol_check_24, context.getString(R.string.MessageNotifier_mark_all_as_read), markAsRead)
         builder.addAction(markAllAsReadAction)
-        builder.extend(NotificationCompat.WearableExtender().addAction(markAllAsReadAction))
+        wearableExtender.addAction(markAllAsReadAction)
       }
     }
 
@@ -274,8 +273,8 @@ sealed class NotificationBuilder(protected val context: Context) {
       }
     }
 
-    override fun addMessagesActual(conversation: NotificationConversation, includeShortcut: Boolean) {
-      if (Build.VERSION.SDK_INT < 24) {
+    override fun addMessagesActual(conversation: NotificationConversation, includeShortcut: Boolean, includeMediaContent: Boolean) {
+      if (Build.VERSION.SDK_INT < 24 && includeMediaContent) {
         val bigPictureUri: Uri? = conversation.getSlideBigPictureUri(context)
         if (bigPictureUri != null) {
           builder.setStyle(
@@ -316,12 +315,38 @@ sealed class NotificationBuilder(protected val context: Context) {
           person = personBuilder.build()
         }
 
-        val (dataUri: Uri?, mimeType: String?) = notificationItem.getThumbnailInfo(context)
+        val mediaContents: List<MessageMediaContent> = if (includeMediaContent) {
+          notificationItem.getMessageMediaContent(context)
+        } else {
+          emptyList()
+        }
 
-        messagingStyle.addMessage(NotificationCompat.MessagingStyle.Message(notificationItem.getPrimaryText(context), notificationItem.timestamp, person).setData(mimeType, dataUri))
+        if (mediaContents.isEmpty()) {
+          messagingStyle.addMessage(NotificationCompat.MessagingStyle.Message(notificationItem.getPrimaryText(context), notificationItem.timestamp, person))
+        } else {
+          mediaContents.forEach { mediaContent ->
+            val message = NotificationCompat.MessagingStyle.Message("", notificationItem.timestamp, person)
+
+            grantNotificationListenerReadAccess(mediaContent.uri)
+            message.setData(mediaContent.contentType, mediaContent.uri)
+            messagingStyle.addMessage(message)
+          }
+        }
       }
 
       builder.setStyle(messagingStyle)
+    }
+
+    private fun grantNotificationListenerReadAccess(uri: Uri?) {
+      if (uri == null) {
+        return
+      }
+
+      NotificationManagerCompat.getEnabledListenerPackages(context).forEach { packageName ->
+        runCatching {
+          context.grantUriPermission(packageName, uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+      }
     }
 
     override fun addMessagesActual(state: NotificationState) {
@@ -485,6 +510,7 @@ sealed class NotificationBuilder(protected val context: Context) {
     }
 
     override fun build(): Notification {
+      builder.extend(wearableExtender)
       return builder.build()
     }
 
@@ -515,6 +541,17 @@ sealed class NotificationBuilder(protected val context: Context) {
     }
   }
 }
+
+private fun NotificationItem.getMessageMediaContent(context: Context): List<MessageMediaContent> {
+  return getThumbnailInfos(context).mapNotNull { thumbnailInfo ->
+    val uri: Uri = thumbnailInfo.uri ?: return@mapNotNull null
+    val contentType: String = thumbnailInfo.contentType ?: return@mapNotNull null
+
+    MessageMediaContent(uri, contentType)
+  }
+}
+
+private data class MessageMediaContent(val uri: Uri, val contentType: String)
 
 private fun Bitmap?.toIconCompat(): IconCompat? {
   return if (this != null) {

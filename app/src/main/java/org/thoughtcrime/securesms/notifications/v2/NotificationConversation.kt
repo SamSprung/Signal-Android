@@ -69,6 +69,10 @@ data class NotificationConversation(
     }
   }
 
+  fun hasImagePreview(context: Context): Boolean {
+    return getSlideBigPictureUri(context) != null
+  }
+
   fun getContentText(context: Context): CharSequence? {
     val privacy: NotificationPrivacyPreference = SignalStore.settings.messageNotificationsPrivacy
     val stringBuilder = SpannableStringBuilder()
