@@ -73,6 +73,12 @@ data class NotificationConversation(
     }
   }
 
+  fun hasImagePreview(context: Context): Boolean {
+    return SignalStore.settings.messageNotificationsPrivacy.isDisplayMessage &&
+      !KeyCachingService.isLocked(context) &&
+      notificationItems.any { it.getBigPictureUri() != null }
+  }
+
   fun getContentText(context: Context): CharSequence? {
     val privacy: NotificationPrivacyPreference = SignalStore.settings.messageNotificationsPrivacy
     val stringBuilder = SpannableStringBuilder()
